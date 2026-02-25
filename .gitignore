@@ -1,0 +1,18 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+crash.log
+
+# Lambda build artifacts
+src/infra/modules/aws-monitoring/dist/
+
+# Node.js
+node_modules/
+
+# TypeScript build output
+src/app/dist/
+
+# Credentials
+.credentials

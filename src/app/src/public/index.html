@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AWS Monitoring Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <h2>AWS Monitor</h2>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#" data-page="dashboard" class="active">Dashboard</a></li>
+      <li><a href="#" data-page="guardduty">GuardDuty</a></li>
+      <li><a href="#" data-page="health">Health Dashboard</a></li>
+    </ul>
+  </nav>
+
+  <main class="content">
+    <div id="page-dashboard" class="page active">
+      <h1>Dashboard</h1>
+      <div class="summary-cards" id="summary-cards">
+        <div class="card loading">Loading...</div>
+      </div>
+    </div>
+
+    <div id="page-guardduty" class="page">
+      <div class="page-header">
+        <h1>GuardDuty Findings</h1>
+        <button class="btn btn-primary" id="btn-sync-guardduty">Sync Now</button>
+      </div>
+      <div class="filters">
+        <select id="filter-severity">
+          <option value="">All Severities</option>
+          <option value="critical">Critical (7+)</option>
+          <option value="high">High (4-6.9)</option>
+          <option value="medium">Medium (2-3.9)</option>
+          <option value="low">Low (0-1.9)</option>
+        </select>
+      </div>
+      <div id="guardduty-table" class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th data-sort="archived" data-table="guardduty">Status <span class="sort-indicator"></span></th>
+              <th data-sort="determination" data-table="guardduty">Determination <span class="sort-indicator"></span></th>
+              <th data-sort="severity" data-table="guardduty">Severity <span class="sort-indicator"></span></th>
+              <th data-sort="type" data-table="guardduty">Type <span class="sort-indicator"></span></th>
+              <th data-sort="title" data-table="guardduty">Title <span class="sort-indicator"></span></th>
+              <th data-sort="accountId" data-table="guardduty">Account <span class="sort-indicator"></span></th>
+              <th data-sort="region" data-table="guardduty">Region <span class="sort-indicator"></span></th>
+              <th data-sort="createdAt" data-table="guardduty">Created <span class="sort-indicator"></span></th>
+            </tr>
+          </thead>
+          <tbody id="guardduty-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <button class="btn" id="btn-guardduty-more" style="display:none">Load More</button>
+      </div>
+    </div>
+
+    <div id="page-health" class="page">
+      <div class="page-header">
+        <h1>Health Dashboard</h1>
+        <button class="btn btn-primary" id="btn-sync-health">Sync Now</button>
+      </div>
+      <div id="health-table" class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th data-sort="statusCode" data-table="health">Status <span class="sort-indicator"></span></th>
+              <th data-sort="determination" data-table="health">Determination <span class="sort-indicator"></span></th>
+              <th data-sort="accountId" data-table="health">Account <span class="sort-indicator"></span></th>
+              <th data-sort="service" data-table="health">Service <span class="sort-indicator"></span></th>
+              <th data-sort="eventTypeCode" data-table="health">Event Type <span class="sort-indicator"></span></th>
+              <th data-sort="severity" data-table="health">Severity <span class="sort-indicator"></span></th>
+              <th data-sort="region" data-table="health">Region <span class="sort-indicator"></span></th>
+              <th data-sort="startTime" data-table="health">Start <span class="sort-indicator"></span></th>
+              <th data-sort="lastUpdatedTime" data-table="health">Last Updated <span class="sort-indicator"></span></th>
+            </tr>
+          </thead>
+          <tbody id="health-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <button class="btn" id="btn-health-more" style="display:none">Load More</button>
+      </div>
+    </div>
+
+    <!-- Finding Detail Modal -->
+    <div id="modal-overlay" class="modal-overlay" style="display:none">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="modal-title">Detail</h2>
+          <button class="btn-close" id="btn-modal-close">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
