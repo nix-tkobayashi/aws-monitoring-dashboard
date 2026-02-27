@@ -76,6 +76,11 @@ resource "aws_ecs_express_gateway_service" "app" {
       value = tostring(var.app_port)
     }
 
+    environment {
+      name  = "SECURITY_HUB_REGION"
+      value = var.security_hub_region
+    }
+
     aws_logs_configuration {
       log_group         = aws_cloudwatch_log_group.app.name
       log_stream_prefix = "ecs/"

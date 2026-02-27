@@ -135,7 +135,8 @@ resource "aws_cloudwatch_event_rule" "event_processor" {
   description = "Route GuardDuty and Health events to Lambda"
 
   event_pattern = jsonencode({
-    source = ["aws.guardduty", "aws.health"]
+    source      = ["aws.guardduty", "aws.health"]
+    detail-type = ["GuardDuty Finding", "AWS Health Event"]
   })
 }
 
@@ -154,7 +155,8 @@ resource "aws_cloudwatch_event_rule" "health_forwarder" {
   description = "Forward Health events to us-east-1"
 
   event_pattern = jsonencode({
-    source = ["aws.health"]
+    source      = ["aws.health"]
+    detail-type = ["AWS Health Event"]
   })
 }
 
@@ -175,7 +177,8 @@ resource "aws_cloudwatch_event_rule" "guardduty_forwarder" {
   description = "Forward GuardDuty events to us-east-1"
 
   event_pattern = jsonencode({
-    source = ["aws.guardduty"]
+    source      = ["aws.guardduty"]
+    detail-type = ["GuardDuty Finding"]
   })
 }
 

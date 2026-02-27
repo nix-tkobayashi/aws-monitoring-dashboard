@@ -77,8 +77,9 @@ module "aws_monitoring" {
   vpc_id            = var.vpc_id
   guardduty_regions = var.guardduty_regions
   subnet_ids        = var.subnet_ids
-  basic_auth_user   = var.basic_auth_user
-  basic_auth_pass   = var.basic_auth_pass
+  security_hub_region = var.security_hub_region
+  basic_auth_user     = var.basic_auth_user
+  basic_auth_pass     = var.basic_auth_pass
 }
 
 # ---------------------------------------------------------------------------

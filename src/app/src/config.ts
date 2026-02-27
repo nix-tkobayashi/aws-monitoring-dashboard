@@ -5,6 +5,7 @@ export const config = {
     guarddutyRegions: (
       process.env.GUARDDUTY_REGIONS || "ap-northeast-1,us-east-1"
     ).split(","),
+    securityHubRegion: process.env.SECURITY_HUB_REGION || "ap-northeast-1",
   },
   dynamodb: {
     guarddutyTable:

@@ -25,7 +25,7 @@ env:
 
 jobs:
   deploy-app:
-    if: ${{ inputs.deploy_app }}
+    if: ${{ inputs.deploy_app && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -66,7 +66,7 @@ jobs:
             --region $AWS_REGION
 
   deploy-lambda:
-    if: ${{ inputs.deploy_lambda }}
+    if: ${{ inputs.deploy_lambda && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

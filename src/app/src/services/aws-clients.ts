@@ -14,7 +14,7 @@ export const guarddutyClient = new GuardDutyClient({
 
 // Security Hub aggregation region
 export const securityHubClient = new SecurityHubClient({
-  region: "ap-northeast-1",
+  region: config.aws.securityHubRegion,
 });
 
 // Organizations (global service, us-east-1)

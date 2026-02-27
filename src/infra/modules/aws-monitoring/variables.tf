@@ -42,12 +42,18 @@ variable "vpc_id" {
 variable "guardduty_regions" {
   description = "Regions to scan for GuardDuty findings"
   type        = list(string)
-  default     = ["ap-northeast-1", "us-east-1"]
+  default     = ["ap-northeast-1", "us-east-1", "us-west-2"]
 }
 
 variable "subnet_ids" {
   description = "Existing subnet IDs (at least 2 in different AZs)"
   type        = list(string)
+}
+
+variable "security_hub_region" {
+  description = "Security Hub aggregation region"
+  type        = string
+  default     = "ap-northeast-1"
 }
 
 variable "basic_auth_user" {
