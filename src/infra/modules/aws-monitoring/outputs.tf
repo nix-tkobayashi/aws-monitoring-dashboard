@@ -47,3 +47,13 @@ output "aws_account_id" {
   description = "AWS account ID"
   value       = data.aws_caller_identity.current.account_id
 }
+
+output "basic_auth_secret_name" {
+  description = "Secrets Manager secret name for BASIC auth credentials"
+  value       = aws_secretsmanager_secret.basic_auth.name
+}
+
+output "basic_auth_secret_arn" {
+  description = "Secrets Manager secret ARN for BASIC auth credentials"
+  value       = aws_secretsmanager_secret.basic_auth.arn
+}

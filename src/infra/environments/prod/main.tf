@@ -78,8 +78,6 @@ module "aws_monitoring" {
   guardduty_regions = var.guardduty_regions
   subnet_ids        = var.subnet_ids
   security_hub_region = var.security_hub_region
-  basic_auth_user     = var.basic_auth_user
-  basic_auth_pass     = var.basic_auth_pass
 }
 
 # ---------------------------------------------------------------------------
