@@ -39,6 +39,13 @@
           <option value="medium">Medium (2-3.9)</option>
           <option value="low">Low (0-1.9)</option>
         </select>
+        <label class="filter-label">From <input type="date" id="filter-guardduty-from"></label>
+        <label class="filter-label">To <input type="date" id="filter-guardduty-to"></label>
+        <select id="guardduty-page-size">
+          <option value="10">10件</option>
+          <option value="50" selected>50件</option>
+          <option value="100">100件</option>
+        </select>
       </div>
       <div id="guardduty-table" class="table-container">
         <table>
@@ -58,6 +65,9 @@
         </table>
       </div>
       <div class="pagination">
+        <button class="btn" id="btn-guardduty-prev" disabled>&larr; 前へ</button>
+        <span class="page-info" id="guardduty-page-info">Page 1 / 1</span>
+        <button class="btn" id="btn-guardduty-next" disabled>次へ &rarr;</button>
         <button class="btn" id="btn-guardduty-more" style="display:none">Load More</button>
       </div>
     </div>
@@ -66,6 +76,15 @@
       <div class="page-header">
         <h1>Health Dashboard</h1>
         <button class="btn btn-primary" id="btn-sync-health">Sync Now</button>
+      </div>
+      <div class="filters">
+        <label class="filter-label">From <input type="date" id="filter-health-from"></label>
+        <label class="filter-label">To <input type="date" id="filter-health-to"></label>
+        <select id="health-page-size">
+          <option value="10">10件</option>
+          <option value="50" selected>50件</option>
+          <option value="100">100件</option>
+        </select>
       </div>
       <div id="health-table" class="table-container">
         <table>
@@ -86,6 +105,9 @@
         </table>
       </div>
       <div class="pagination">
+        <button class="btn" id="btn-health-prev" disabled>&larr; 前へ</button>
+        <span class="page-info" id="health-page-info">Page 1 / 1</span>
+        <button class="btn" id="btn-health-next" disabled>次へ &rarr;</button>
         <button class="btn" id="btn-health-more" style="display:none">Load More</button>
       </div>
     </div>
