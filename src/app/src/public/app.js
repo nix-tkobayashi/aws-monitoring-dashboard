@@ -89,10 +89,16 @@ function isArchivedFromService(item) {
   }
 }
 
+// ── Page State ──
+const pageState = {
+  guardduty: { size: 50, current: 1 },
+  health:    { size: 50, current: 1 },
+};
+
 // ── Sort State ──
 const sortState = {
-  guardduty: { field: null, dir: "asc" },
-  health:    { field: null, dir: "asc" },
+  guardduty: { field: "createdAt", dir: "desc" },
+  health:    { field: "startTime", dir: "desc" },
 };
 
 const HEALTH_SEVERITY_ORDER = { critical: 4, high: 3, medium: 2, low: 1, informational: 0 };
@@ -164,6 +170,7 @@ document.querySelectorAll("th[data-sort]").forEach((th) => {
       state.dir = "asc";
     }
 
+    pageState[table].current = 1;
     if (table === "guardduty") renderGuardDutyTable();
     if (table === "health") renderHealthTable();
   });
@@ -196,6 +203,7 @@ let healthItems = [];
 
 // ── Severity filter ──
 document.getElementById("filter-severity").addEventListener("change", () => {
+  pageState.guardduty.current = 1;
   renderGuardDutyTable();
 });
 
@@ -205,15 +213,52 @@ function filterBySeverity(items) {
   return items.filter((item) => getSeverityLevel(item.severity || 0) === filter);
 }
 
+// ── Date range filter ──
+function filterByDateRange(items, dateField, fromId, toId) {
+  const fromVal = document.getElementById(fromId).value;
+  const toVal = document.getElementById(toId).value;
+  if (!fromVal && !toVal) return items;
+
+  const fromTime = fromVal ? new Date(fromVal).getTime() : -Infinity;
+  // To date is inclusive: set to end of day
+  const toTime = toVal ? new Date(toVal).getTime() + 86400000 - 1 : Infinity;
+
+  return items.filter((item) => {
+    const t = item[dateField] ? new Date(item[dateField]).getTime() : 0;
+    return t >= fromTime && t <= toTime;
+  });
+}
+
+// ── Pagination helpers ──
+function paginateItems(items, table) {
+  const state = pageState[table];
+  const totalPages = Math.max(1, Math.ceil(items.length / state.size));
+  if (state.current > totalPages) state.current = totalPages;
+  const start = (state.current - 1) * state.size;
+  const end = start + state.size;
+  return { paged: items.slice(start, end), totalPages, totalItems: items.length };
+}
+
+function updatePaginationUI(table, totalPages) {
+  const state = pageState[table];
+  document.getElementById(`${table}-page-info`).textContent = `Page ${state.current} / ${totalPages}`;
+  document.getElementById(`btn-${table}-prev`).disabled = state.current <= 1;
+  document.getElementById(`btn-${table}-next`).disabled = state.current >= totalPages;
+}
+
 // ── GuardDuty render ──
 function renderGuardDutyTable() {
   const tbody = document.getElementById("guardduty-tbody");
   let items = filterBySeverity(guarddutyItems);
+  items = filterByDateRange(items, "createdAt", "filter-guardduty-from", "filter-guardduty-to");
 
   if (sortState.guardduty.field) {
     items = sortItems(items, sortState.guardduty.field, sortState.guardduty.dir, "guardduty");
   }
   updateSortIndicators("guardduty");
+
+  const { paged, totalPages } = paginateItems(items, "guardduty");
+  updatePaginationUI("guardduty", totalPages);
 
   tbody.innerHTML = "";
 
@@ -222,7 +267,7 @@ function renderGuardDutyTable() {
     return;
   }
 
-  for (const item of items) {
+  for (const item of paged) {
     const sev = item.severity || 0;
     const isArchived = item.archived === true || isArchivedFromService(item);
     const tr = document.createElement("tr");
@@ -248,12 +293,15 @@ function renderGuardDutyTable() {
 // ── Health render ──
 function renderHealthTable() {
   const tbody = document.getElementById("health-tbody");
-  let items = healthItems;
+  let items = filterByDateRange(healthItems, "startTime", "filter-health-from", "filter-health-to");
 
   if (sortState.health.field) {
     items = sortItems(items, sortState.health.field, sortState.health.dir, "health");
   }
   updateSortIndicators("health");
+
+  const { paged, totalPages } = paginateItems(items, "health");
+  updatePaginationUI("health", totalPages);
 
   tbody.innerHTML = "";
 
@@ -262,7 +310,7 @@ function renderHealthTable() {
     return;
   }
 
-  for (const item of items) {
+  for (const item of paged) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${statusBadge(item.statusCode || "unknown")}</td>
@@ -627,6 +675,45 @@ document.getElementById("btn-sync-health").addEventListener("click", async () =>
   }
   btn.disabled = false;
   btn.textContent = "Sync Now";
+});
+
+// ── Pagination & date filter event listeners ──
+["guardduty", "health"].forEach((table) => {
+  // Page size change
+  document.getElementById(`${table}-page-size`).addEventListener("change", (e) => {
+    pageState[table].size = parseInt(e.target.value, 10);
+    pageState[table].current = 1;
+    if (table === "guardduty") renderGuardDutyTable();
+    else renderHealthTable();
+  });
+
+  // Prev / Next
+  document.getElementById(`btn-${table}-prev`).addEventListener("click", () => {
+    if (pageState[table].current > 1) {
+      pageState[table].current--;
+      if (table === "guardduty") renderGuardDutyTable();
+      else renderHealthTable();
+    }
+  });
+
+  document.getElementById(`btn-${table}-next`).addEventListener("click", () => {
+    pageState[table].current++;
+    if (table === "guardduty") renderGuardDutyTable();
+    else renderHealthTable();
+  });
+
+  // Date filters
+  document.getElementById(`filter-${table}-from`).addEventListener("change", () => {
+    pageState[table].current = 1;
+    if (table === "guardduty") renderGuardDutyTable();
+    else renderHealthTable();
+  });
+
+  document.getElementById(`filter-${table}-to`).addEventListener("change", () => {
+    pageState[table].current = 1;
+    if (table === "guardduty") renderGuardDutyTable();
+    else renderHealthTable();
+  });
 });
 
 // Initial load

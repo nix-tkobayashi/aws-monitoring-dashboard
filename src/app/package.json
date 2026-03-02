@@ -13,6 +13,7 @@
     "@aws-sdk/client-dynamodb": "^3.700.0",
     "@aws-sdk/client-guardduty": "^3.700.0",
     "@aws-sdk/client-organizations": "^3.997.0",
+    "@aws-sdk/client-secrets-manager": "^3.700.0",
     "@aws-sdk/client-securityhub": "^3.700.0",
     "@aws-sdk/lib-dynamodb": "^3.700.0",
     "express": "^4.21.0",

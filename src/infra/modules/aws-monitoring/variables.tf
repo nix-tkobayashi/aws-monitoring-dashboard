@@ -56,14 +56,3 @@ variable "security_hub_region" {
   default     = "ap-northeast-1"
 }
 
-variable "basic_auth_user" {
-  description = "BASIC auth username for dashboard (empty = auth disabled)"
-  type        = string
-  default     = ""
-}
-
-variable "basic_auth_pass" {
-  description = "BASIC auth password for dashboard (empty = auth disabled)"
-  type        = string
-  default     = ""
-}

@@ -28,9 +28,17 @@ resource "aws_dynamodb_table" "guardduty_findings" {
   # GSI: Query by finding type and severity
   global_secondary_index {
     name            = "gsi-type-severity"
-    hash_key        = "type"
-    range_key       = "severity"
     projection_type = "ALL"
+
+    key_schema {
+      attribute_name = "type"
+      key_type       = "HASH"
+    }
+
+    key_schema {
+      attribute_name = "severity"
+      key_type       = "RANGE"
+    }
   }
 
   ttl {
@@ -73,9 +81,17 @@ resource "aws_dynamodb_table" "health_events" {
   # GSI: Query by status
   global_secondary_index {
     name            = "gsi-status"
-    hash_key        = "statusCode"
-    range_key       = "startTime"
     projection_type = "ALL"
+
+    key_schema {
+      attribute_name = "statusCode"
+      key_type       = "HASH"
+    }
+
+    key_schema {
+      attribute_name = "startTime"
+      key_type       = "RANGE"
+    }
   }
 
   ttl {

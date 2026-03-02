@@ -47,13 +47,8 @@ resource "aws_ecs_express_gateway_service" "app" {
     }
 
     environment {
-      name  = "BASIC_AUTH_PASS"
-      value = var.basic_auth_pass
-    }
-
-    environment {
-      name  = "BASIC_AUTH_USER"
-      value = var.basic_auth_user
+      name  = "BASIC_AUTH_SECRET_NAME"
+      value = aws_secretsmanager_secret.basic_auth.name
     }
 
     environment {
@@ -98,7 +93,7 @@ resource "aws_ecs_express_gateway_service" "app" {
     auto_scaling_target_value = 80
   }
 
-  wait_for_steady_state = true
+  wait_for_steady_state = false
 
   lifecycle {
     ignore_changes = [
@@ -108,6 +103,10 @@ resource "aws_ecs_express_gateway_service" "app" {
       # correctly on the ECS service.  When adding/changing env vars, remove
       # this line temporarily, apply, then restore it.
       primary_container[0].environment,
+      # Workaround: AWS provider bug - command oscillates between null and
+      # empty list [], causing perpetual diffs and "inconsistent result
+      # after apply" errors.
+      primary_container[0].command,
     ]
   }
 }

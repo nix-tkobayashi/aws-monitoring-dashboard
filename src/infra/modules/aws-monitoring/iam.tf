@@ -79,6 +79,11 @@ resource "aws_iam_policy" "ecs_task" {
           aws_dynamodb_table.health_events.arn,
           "${aws_dynamodb_table.health_events.arn}/index/*"
         ]
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["secretsmanager:GetSecretValue"]
+        Resource = [aws_secretsmanager_secret.basic_auth.arn]
       }
     ]
   })
